@@ -328,7 +328,7 @@ function applyFilters(){
   const fType=document.getElementById('f-type').value;
   const fScore=parseInt(document.getElementById('f-score').value)||0;
   filtered=ALL_RECORDS.filter(r=>{
-    if(activeCounty!=='all'&&(r.county||'').toLowerCase()!==activeCounty)return false;
+    if(activeCounty!=='all'&&(r.county||'').toLowerCase()!==activeCounty.toLowerCase())return false;
     if(hideLLC&&isLLC(r))return false;
     if(fType&&r.doc_type!==fType)return false;
     if(fScore&&r.score<fScore)return false;

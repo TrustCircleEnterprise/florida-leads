@@ -93,7 +93,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14
       <div class="result-card highlight"><h4>MAO (Avg Comps - $5k)</h4><div class="big-num" id="r-mao">—</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px">Starting point</div></div>
       <div class="result-card offer"><h4>Suggested Offer</h4><div class="big-num" id="r-offer" style="color:var(--purple2)">—</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px" id="r-assign-lbl">—</div></div>
     </div>
-    <div class="form-grid" style="margin-top:4px">
+    <div id="comps-table" style="margin-bottom:16px;display:none"><div style="font-family:var(--cond);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px">Recent Comparable Sales</div><div id="comps-list"></div></div><div class="form-grid" style="margin-top:4px">
       <div class="form-group"><label>Override Offer Amount ($)</label><input type="number" id="override-offer" placeholder="e.g. 6000" oninput="updateOffer()"/></div>
       <div class="form-group"><label>Assignment Fee ($)</label><input type="number" id="override-assign" placeholder="e.g. 3000" oninput="updateOffer()"/></div>
     </div>

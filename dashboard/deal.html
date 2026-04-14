@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Deal Tool — TrustCircle Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d0a14;--bg2:#13101e;--bg3:#1a1628;--border:#2a2040;--border2:#3a2f58;--text:#e0d8f0;--muted:#6a5f85;--accent:#c9a227;--purple:#7c3aed;--purple2:#9d5cf5;--green:#2a9d60;--mono:'Space Mono',monospace;--cond:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;--radius:4px}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;min-height:100vh}
+#topbar{background:rgba(13,10,20,.96);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:16px;padding:0 28px;height:60px;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--purple2));border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-weight:900;font-size:16px;color:#fff}
+.logo-text .top{font-family:var(--cond);font-weight:900;font-size:17px;color:var(--accent);text-transform:uppercase}
+.logo-text .bot{font-family:var(--cond);font-weight:300;font-size:13px;color:var(--text);text-transform:uppercase;letter-spacing:.1em}
+.container{max-width:960px;margin:0 auto;padding:32px 24px}
+.page-title{font-family:var(--cond);font-weight:900;font-size:48px;line-height:1;text-transform:uppercase;margin-bottom:6px}
+.page-title span{color:var(--accent)}
+.page-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:32px}
+.card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.card h3{font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.form-grid-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.form-group input,.form-group select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:12px;padding:8px 12px;border-radius:var(--radius);outline:none;transition:border-color .15s;width:100%}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent)}
+.btn{padding:10px 20px;font-family:var(--cond);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff}
+.btn-gold{background:var(--accent);color:#000}
+.btn-green{background:var(--green);color:#fff}
+.btn-full{width:100%;padding:12px}
+.results-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.result-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;text-align:center}
+.result-card.highlight{border-color:var(--accent);background:rgba(201,162,39,.06)}
+.result-card.offer{border-color:var(--purple);background:rgba(124,58,237,.08)}
+.result-card h4{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.result-card .big-num{font-family:var(--cond);font-weight:900;font-size:32px;line-height:1;color:var(--accent)}
+.buyer-list{display:flex;flex-direction:column;gap:8px}
+.buyer-item{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .15s}
+.buyer-item:hover{border-color:var(--accent)}
+.buyer-item.selected{border-color:var(--green);background:rgba(42,157,96,.1)}
+.buyer-name{font-family:var(--cond);font-weight:700;font-size:15px}
+.buyer-price{font-family:var(--cond);font-weight:900;font-size:20px;color:var(--green);margin-top:4px}
+.buyer-notes{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.buyer-assign{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:4px;font-weight:700}
+.no-buyers{color:var(--muted);font-family:var(--mono);font-size:12px;text-align:center;padding:24px}
+.msg-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;font-size:13px;line-height:1.8;color:var(--text);white-space:pre-wrap;margin-bottom:12px;min-height:80px}
+.copy-row{display:flex;gap:10px}
+.tag{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:2px;font-weight:700;text-transform:uppercase;margin-left:4px}
+.tag-match{background:rgba(42,157,96,.2);color:#40c080}
+.tag-any{background:rgba(201,162,39,.2);color:var(--accent)}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--accent);animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sep{width:1px;height:28px;background:var(--border2)}
+@media(max-width:640px){.form-grid,.form-grid-3,.results-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav id="topbar">
+  <div class="logo-wrap">
+    <div class="logo-icon">TC</div>
+    <div class="logo-text"><div class="top">TrustCircle</div><div class="bot">Enterprise</div></div>
+  </div>
+  <div class="sep"></div>
+  <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">Deal Tool</span>
+</nav>
+<div class="container">
+  <div class="page-title">Deal <span>Tool</span></div>
+  <div class="page-sub">Underwrite · Match Buyers · Generate Offer Message — all in one place</div>
+  <div class="card">
+    <h3>Step 1 — Property Details</h3>
+    <div class="form-grid-3">
+      <div class="form-group"><label>Street Address</label><input type="text" id="inp-address" placeholder="123 Main St"/></div>
+      <div class="form-group"><label>City</label><input type="text" id="inp-city" placeholder="Lehigh Acres"/></div>
+      <div class="form-group"><label>Zip Code</label><input type="text" id="inp-zip" placeholder="33971" maxlength="5"/></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Seller First Name</label><input type="text" id="inp-seller" placeholder="William"/></div>
+      <div class="form-group"><label>Property Type</label>
+        <select id="inp-type"><option value="land">Land / Lot</option><option value="house">House</option></select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="analyze-btn" onclick="runAnalysis()">🔍 Analyze Property + Match Buyers</button>
+  </div>
+  <div class="card" id="uw-section" style="display:none">
+    <h3>Step 2 — Underwriting Results</h3>
+    <div class="results-grid">
+      <div class="result-card highlight"><h4>Avg Comps (ARV)</h4><div class="big-num" id="r-arv">—</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px" id="r-comps">—</div></div>
+      <div class="result-card highlight"><h4>MAO (Avg Comps - $5k)</h4><div class="big-num" id="r-mao">—</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px">Starting point</div></div>
+      <div class="result-card offer"><h4>Suggested Offer</h4><div class="big-num" id="r-offer" style="color:var(--purple2)">—</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px" id="r-assign-lbl">—</div></div>
+    </div>
+    <div class="form-grid" style="margin-top:4px">
+      <div class="form-group"><label>Override Offer Amount ($)</label><input type="number" id="override-offer" placeholder="e.g. 6000" oninput="updateOffer()"/></div>
+      <div class="form-group"><label>Assignment Fee ($)</label><input type="number" id="override-assign" placeholder="e.g. 3000" oninput="updateOffer()"/></div>
+    </div>
+  </div>
+  <div class="card" id="buyers-section" style="display:none">
+    <h3>Step 3 — Matching Buyers <span style="font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:400">(click to select)</span></h3>
+    <div class="buyer-list" id="buyer-list"></div>
+  </div>
+  <div class="card" id="msg-section" style="display:none">
+    <h3>Step 4 — Generate Offer Message</h3>
+    <div class="form-grid" style="margin-bottom:14px">
+      <div class="form-group"><label>Final Offer Amount ($)</label><input type="number" id="final-offer" placeholder="e.g. 6000" oninput="generateMessage()"/></div>
+      <div class="form-group"><label>Closing Cost Coverage</label>
+        <select id="closing-costs" onchange="generateMessage()">
+          <option value="all standard closing costs">All Standard Closing Costs</option>
+          <option value="title and closing fees">Title and Closing Fees</option>
+          <option value="all closing costs">All Closing Costs</option>
+        </select>
+      </div>
+    </div>
+    <div class="msg-box" id="msg-preview">Enter your final offer amount above to generate the message.</div>
+    <div class="copy-row">
+      <button class="btn btn-gold" onclick="copyMessage()" style="flex:1">📋 Copy Message</button>
+      <button class="btn btn-green" onclick="generateMessage()" style="flex:1">🔄 Regenerate</button>
+    </div>
+    <div id="copy-confirm" style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--green);margin-top:10px;display:none">✅ Copied! Paste into GHL and send.</div>
+  </div>
+</div>
+<script>
+const RENTCAST_KEY='8838326b3d474641a8d8f47251144f68';
+const BUYERS=[
+  {name:"Mark",source:"EDB Discord",city:"Cape Coral",zip:"",maxPrice:30000,notes:"Must be Lakeview, NO Canals"},
+  {name:"Mark",source:"EDB Discord",city:"Lehigh Acres",zip:"33971",maxPrice:21000,notes:"$20k-$21k around 20th-24th St W / $15.5k-$16.5k around 30th-34th St W / Over 35th-75th St W $12.5k-$14.5k. Prices vary on soil, utilities, tortoises"},
+  {name:"Mark",source:"EDB Discord",city:"Lehigh Acres",zip:"33974",maxPrice:14000,notes:"Tortoises/wetlands good lots $9.5k under / Oversized or lakefront $15k under / No wetland or tortoises $14k under"},
+  {name:"Mark",source:"EDB Discord",city:"Lehigh Acres",zip:"33976",maxPrice:24500,notes:"South of Lee Blvd & North of 38th St SW $24k-$24.5k / Oversized $27k under / Other lots $20k-$23k"},
+  {name:"Mark",source:"EDB Discord",city:"Lehigh Acres",zip:"33972",maxPrice:21000,notes:"East of Joel Blvd $17k under (up to $18.5k good soil/utilities) / West of Joel Blvd $19k-$21k (up to $22k good soil/utilities)"},
+  {name:"Jerell",source:"EDB Discord",city:"Peach Land",zip:"",maxPrice:30000,notes:"Flood zone X only / No main roads / $6k per GT removal / -$4k scrub jays"},
+  {name:"Jerell",source:"EDB Discord",city:"Port Charlotte",zip:"",maxPrice:30000,notes:"Flood zone X only / No main roads / $6k per GT removal / -$4k scrub jays"},
+  {name:"Jerell",source:"EDB Discord",city:"Englewood",zip:"",maxPrice:20000,notes:"City Water up to $20k / Well/Septic up to $17k / Flood zone X only"},
+  {name:"Jerell",source:"EDB Discord",city:"North Gulf Cove",zip:"",maxPrice:20000,notes:"City Water up to $20k / Flood zone X only / No main roads"},
+  {name:"Jerell",source:"EDB Discord",city:"Lehigh Acres",zip:"33971",maxPrice:20000,notes:"Stay below Sunshine Blvd"},
+  {name:"Jerell",source:"EDB Discord",city:"Lehigh Acres",zip:"33972",maxPrice:22000,notes:"1/4 acres only / 80x125 depth / No lots in Grenbriar"},
+  {name:"Jerell",source:"EDB Discord",city:"Lehigh Acres",zip:"33974",maxPrice:19000,notes:""},
+  {name:"Jerell",source:"EDB Discord",city:"Lehigh Acres",zip:"33976",maxPrice:25000,notes:""},
+  {name:"Jerell",source:"EDB Discord",city:"Lehigh Acres",zip:"33973",maxPrice:18000,notes:"SFH Only"},
+  {name:"JP Traps Houses",source:"Discord",city:"Port Charlotte",zip:"",maxPrice:25000,notes:"Must have City Water"},
+  {name:"JP Traps Houses",source:"Discord",city:"Port Charlotte",zip:"",maxPrice:16000,notes:"Well Water"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32207",maxPrice:40000,notes:"$20k-$40k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32219",maxPrice:25000,notes:"$10k-$25k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32254",maxPrice:20000,notes:"$10k-$20k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32208",maxPrice:20000,notes:"$10k-$20k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32209",maxPrice:15000,notes:"$5k-$15k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32656",maxPrice:25000,notes:"$15k-$25k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32068",maxPrice:60000,notes:"$30k-$60k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32206",maxPrice:17500,notes:"If historical data $30k-$80k"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32204",maxPrice:50000,notes:"$10k-$50k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32205",maxPrice:80000,notes:"$20k-$80k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32218",maxPrice:50000,notes:"$20k-$50k depends on area"},
+  {name:"Jerell",source:"Discord",city:"Jacksonville",zip:"32210",maxPrice:40000,notes:"$15k-$40k depends on area"},
+];
+let currentARV=0,currentMAO=0,currentOffer=0,currentAssign=3000;
+window._matchedBuyers=[];
+function fmt$(n){if(!n&&n!==0)return'$0';return'$'+Number(n).toLocaleString('en-US',{maximumFractionDigits:0})}
+function matchBuyers(city,zip){
+  const cl=city.toLowerCase().trim();
+  return BUYERS.filter(b=>{
+    const bc=b.city.toLowerCase();
+    return(cl.includes(bc)||bc.includes(cl))&&(!b.zip||b.zip===zip.trim());
+  }).sort((a,b)=>b.maxPrice-a.maxPrice);
+}
+function updateOffer(){
+  const ov=parseFloat(document.getElementById('override-offer').value)||0;
+  const oa=parseFloat(document.getElementById('override-assign').value)||currentAssign;
+  if(ov>0){currentOffer=ov;currentAssign=oa;}
+  document.getElementById('r-offer').textContent=fmt$(currentOffer);
+  document.getElementById('r-assign-lbl').textContent='Assignment: '+fmt$(currentAssign);
+  document.getElementById('final-offer').value=currentOffer||'';
+  generateMessage();
+}
+async function runAnalysis(){
+  const address=document.getElementById('inp-address').value.trim();
+  const city=document.getElementById('inp-city').value.trim();
+  const zip=document.getElementById('inp-zip').value.trim();
+  const type=document.getElementById('inp-type').value;
+  if(!address||!city){alert('Please enter address and city');return;}
+  const btn=document.getElementById('analyze-btn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Analyzing...';
+  ['uw-section','buyers-section','msg-section'].forEach(id=>document.getElementById(id).style.display='block');
+  ['r-arv','r-mao','r-offer'].forEach(id=>document.getElementById(id).textContent='...');
+  try{
+    const url='https://api.rentcast.io/v1/avm/value?address='+encodeURIComponent(address)+'&city='+encodeURIComponent(city)+'&state=FL&zipCode='+encodeURIComponent(zip)+'&propertyType='+(type==='land'?'Land':'Single+Family')+'&compCount=6';
+    const res=await fetch(url,{headers:{'X-Api-Key':RENTCAST_KEY,'accept':'application/json'}});
+    const d=res.ok?await res.json():null;
+    const comps=d?.comparables||[];
+    const avgComp=comps.length>0?comps.reduce((s,c)=>s+(c.price||c.salePrice||0),0)/comps.length:(d?.price||d?.value||0);
+    currentARV=avgComp;currentMAO=Math.max(0,currentARV-5000);
+    currentAssign=type==='land'?3000:5000;currentOffer=Math.max(0,currentMAO-currentAssign);
+    document.getElementById('r-arv').textContent=fmt$(currentARV);
+    document.getElementById('r-mao').textContent=fmt$(currentMAO);
+    document.getElementById('r-offer').textContent=fmt$(currentOffer);
+    document.getElementById('r-comps').textContent=comps.length+' comps found';
+    document.getElementById('r-assign-lbl').textContent='Assignment: '+fmt$(currentAssign);
+    document.getElementById('override-assign').value=currentAssign;
+    document.getElementById('final-offer').value=currentOffer;
+  }catch(e){['r-arv','r-mao','r-offer'].forEach(id=>document.getElementById(id).textContent='N/A');}
+  const matched=matchBuyers(city,zip);
+  window._matchedBuyers=matched;
+  const bl=document.getElementById('buyer-list');
+  if(!matched.length){bl.innerHTML='<div class="no-buyers">No buyers found for this area.</div>';}
+  else{
+    bl.innerHTML=matched.map((b,i)=>{
+      const assign=b.maxPrice-currentMAO;
+      const zipBadge=b.zip?`<span class="tag tag-match">${b.zip}</span>`:`<span class="tag tag-any">Any Zip</span>`;
+      return`<div class="buyer-item" onclick="selectBuyer(${i})" id="bi-${i}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+          <div style="flex:1">
+            <div class="buyer-name">${b.name}${zipBadge} <span style="font-size:11px;color:var(--muted);font-weight:400">via ${b.source}</span></div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px">${b.city}, FL ${b.zip||''}</div>
+            <div class="buyer-price">Pays up to ${fmt$(b.maxPrice)}</div>
+            ${b.notes?`<div class="buyer-notes">📋 ${b.notes}</div>`:''}
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase">Your Assignment</div>
+            <div class="buyer-assign">${assign>0?fmt$(assign):'⚠ Below MAO'}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  generateMessage();
+  btn.disabled=false;btn.innerHTML='🔍 Analyze Property + Match Buyers';
+}
+function selectBuyer(i){
+  document.querySelectorAll('.buyer-item').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('bi-'+i).classList.add('selected');
+  const b=window._matchedBuyers[i];
+  const suggestedOffer=Math.max(0,b.maxPrice-currentAssign);
+  document.getElementById('override-offer').value=suggestedOffer;
+  document.getElementById('override-assign').value=currentAssign;
+  currentOffer=suggestedOffer;
+  document.getElementById('r-offer').textContent=fmt$(currentOffer);
+  document.getElementById('r-assign-lbl').textContent='Assignment: '+fmt$(currentAssign)+' | Buyer: '+b.name;
+  document.getElementById('final-offer').value=suggestedOffer;
+  generateMessage();
+}
+function generateMessage(){
+  const seller=document.getElementById('inp-seller').value.trim()||'there';
+  const offerAmt=parseFloat(document.getElementById('final-offer').value)||0;
+  const closing=document.getElementById('closing-costs').value;
+  if(!offerAmt){document.getElementById('msg-preview').textContent='Enter your final offer amount above to generate the message.';return;}
+  document.getElementById('msg-preview').textContent=`Hi ${seller}, I appreciate you being open to offers. After taking a closer look at the property and recent activity in the area, we're able to offer you ${fmt$(offerAmt)}. We would cover ${closing}, so that would be your full net at closing. Would that be something you'd consider? — Makisha, TrustCircle Enterprise`;
+}
+function copyMessage(){
+  navigator.clipboard.writeText(document.getElementById('msg-preview').textContent).then(()=>{
+    const c=document.getElementById('copy-confirm');c.style.display='block';
+    setTimeout(()=>c.style.display='none',2500);
+  });
+}
+const p=new URLSearchParams(window.location.search);
+if(p.get('address'))document.getElementById('inp-address').value=p.get('address');
+if(p.get('city'))document.getElementById('inp-city').value=p.get('city');
+if(p.get('zip'))document.getElementById('inp-zip').value=p.get('zip');
+if(p.get('seller'))document.getElementById('inp-seller').value=p.get('seller');
+if(p.get('type'))document.getElementById('inp-type').value=p.get('type');
+if(p.get('address')&&p.get('city'))runAnalysis();
+</script>
+</body>
+</html>

@@ -192,3 +192,36 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def enrich_with_parcels(records):
+    """Add addresses to Brevard records using Florida DOR parcel API."""
+    try:
+        from parcel_lookup import lookup_by_name
+    except ImportError:
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from parcel_lookup import lookup_by_name
+
+    matched = 0
+    for i, rec in enumerate(records):
+        if rec.get("prop_address"):
+            continue
+        for name in [rec.get("grantee", ""), rec.get("owner", "")]:
+            if not name:
+                continue
+            if re.search(r"\b(LLC|INC|CORP|LTD|TRUST|STATE OF|COUNTY|CITY OF)\b", name.upper()):
+                continue
+            result = lookup_by_name(name, "Brevard")
+            if result:
+                for k, v in result.items():
+                    if v:
+                        rec[k] = v
+                matched += 1
+                break
+        if i % 100 == 0 and i > 0:
+            log.info(f"  Address lookup: {i}/{len(records)} records, {matched} matched")
+        import time
+        time.sleep(0.3)
+    log.info(f"Address enrichment: {matched}/{len(records)} matched")
+    return records

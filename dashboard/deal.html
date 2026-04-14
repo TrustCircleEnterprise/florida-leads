@@ -194,7 +194,7 @@ async function runAnalysis(){
     document.getElementById('r-arv').textContent=fmt$(currentARV);
     document.getElementById('r-mao').textContent=fmt$(currentMAO);
     document.getElementById('r-offer').textContent=fmt$(currentOffer);
-    document.getElementById('r-comps').textContent=comps.length+' comps found';
+    document.getElementById('r-comps').textContent=comps.length+' comps found';if(comps.length>0){document.getElementById('comps-table').style.display='block';document.getElementById('comps-list').innerHTML=comps.slice(0,5).map(c=>{const price=c.price||c.salePrice||0;const date=c.saleDate||c.lastSaleDate||'';const year=date?new Date(date).getFullYear():'N/A';const addr=(c.formattedAddress||c.address||'Unknown').split(',')[0];return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(42,32,64,.4);font-size:12px"><span style="color:var(--text)">'+addr+'</span><span style="font-family:var(--mono)"><span style="color:var(--accent);font-weight:700">'+fmt$(price)+'</span> <span style="color:var(--muted);font-size:10px">'+year+'</span></span></div>';}).join('');}
     document.getElementById('r-assign-lbl').textContent='Assignment: '+fmt$(currentAssign);
     document.getElementById('override-assign').value=currentAssign;
     document.getElementById('final-offer').value=currentOffer;
